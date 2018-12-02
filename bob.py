@@ -119,14 +119,17 @@ def get_ipns_pyobj(hash):
 def test_easy_address(address, seckey_bob, pubkey_alice, data_text):
 
 	box = Box(seckey_bob, pubkey_alice)
-	message = box.decrypt(benc64.decode(address))
-	dev_mess = message.decode().split('@')
-	print('dev_mess',dev_mess)
-	if dev_mess[1] in data_text.decode():
-		printt('Yes, it\'s my address!')
-		return 1
-	else:
-		printt('No, it\'s not my address!')
+	try:
+		message = box.decrypt(benc64.decode(address))
+		dev_mess = message.decode().split('@')
+		print('dev_mess',dev_mess)
+		if dev_mess[1] in data_text.decode():
+			printt('Yes, it\'s my address!')
+			return 1
+		else:
+			printt('No, it\'s not my address!')
+			return 0
+	except:
 		return 0
 	
 	
