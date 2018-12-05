@@ -8,7 +8,7 @@ import getpass
 
 def make_keys(password, type):
 	'''
-	Make a key pair to eather P-256 or curve25519 from any strying
+	Make a key pair to eather P-256 or curve25519 from any string
 	'''
 	sha256 = SHA256.new(password.encode())	
 	
@@ -28,6 +28,35 @@ def make_keys(password, type):
 		return PrivateKey(sha, encoder=benc)
 	else:
 		raise ValueError('Only P-256 or curve25519 types are allowed.')
+		
+		
+		
+def make_keys_pbkdf2(password, type, key_amount = 1):
+	'''
+	Make a multiple key pairs at once, eather P-256 or curve25519 from any string
+	'''
+	if type == 'P-256':
+		dkLen = 31
+	elif type == 'curve25519':
+		dkLen = 32
+	else:
+		print('type:', type,'\n')
+		raise ValueError('Only P-256 or curve25519 types are allowed.')
+		
+	keys = []
+	for tymes in range(key_amount):
+		sha256 = SHA256.new(password)
+		count = int(str(int(benc.encode(sha256.digest()),16))[0:5])
+		key = PBKDF2(password, salt = str(sha256), dkLen = dkLen, count = count)
+		if type == 'P-256':
+			d = int(benc.encode(key),16)
+			keys.append(ECC.construct(curve = 'P-256', d = d))
+		else:
+			keys.append(PrivateKey(benc.encode(key), encoder=benc))
+		key = password
+	return keys
+
+
 
 if __name__ == '__main__':
 	while True:
