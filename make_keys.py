@@ -3,6 +3,7 @@ from Crypto.Hash import SHA256
 from Crypto.Signature import DSS
 from nacl.encoding import HexEncoder as benc
 from nacl.public import PrivateKey, PublicKey, Box
+from Crypto.Protocol.KDF import PBKDF2
 import getpass
 
 
