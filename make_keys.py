@@ -1,11 +1,28 @@
-from Crypto.PublicKey import ECC
+from Crypto.PublicKey import ECC, RSA
 from Crypto.Hash import SHA256
 from Crypto.Signature import DSS
 from nacl.encoding import HexEncoder as benc
 from nacl.public import PrivateKey, PublicKey, Box
 from Crypto.Protocol.KDF import PBKDF2
+
 import getpass
 
+
+
+def make_rsa(password, size = 2048):
+	'''
+	Make a RSA key pair from any string
+	'''
+	sha256 = str(SHA256.new(password.encode()).digest())	
+	master_key = PBKDF2(password, salt = sha256, count=10000) 
+
+	def my_rand(n):
+		my_rand.counter += 1
+		return PBKDF2(master_key, "my_rand:%d" % my_rand.counter, dkLen=n, count=1)
+
+	my_rand.counter = 0
+
+	return RSA.generate(size, randfunc=my_rand) #rsa_key.export_key('PEM')
 
 def make_keys(password, type):
 	'''
@@ -36,6 +53,7 @@ def make_keys_pbkdf2(password, type, key_amount = 1):
 	'''
 	Make a multiple key pairs at once, eather P-256 or curve25519 from any string
 	'''
+	######### ПЕРЕДЕЛАТЬ! РЕЗУЛЬТАТЫ НЕ ОДИНАКОВЫ ПО ЗАПУСКАМ! ################
 	if type == 'P-256':
 		dkLen = 31
 	elif type == 'curve25519':
