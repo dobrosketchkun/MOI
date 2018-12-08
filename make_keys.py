@@ -4,17 +4,33 @@ from Crypto.Signature import DSS
 from nacl.encoding import HexEncoder as benc
 from nacl.public import PrivateKey, PublicKey, Box
 from Crypto.Protocol.KDF import PBKDF2
-
 import getpass
 
 
+def sha000(password, circles = 1):
+	'''
+	Some defence from rainbow tables
+	'''
+	for times in range(circles):
+		cond = 1
+		counter = 0
+		while cond:
+			sha256 = str(SHA256.new(password.encode()).hexdigest())
+			if sha256[0:4] == '0000':
+				cond = 0	
+				result = sha256 
+			else:
+				password = sha256
+				counter += 1
+		password = result	
+	return result
 
-	
 def make_rsa_keys(password, size = 2048, key_amount = 1):
 	'''
 	Make RSA key pairs from any string.
 	Returns a list
 	'''
+	password = sha000(password, 5)
 	keys = []
 	sha256 = str(SHA256.new(password.encode()).digest())	
 
@@ -34,7 +50,7 @@ def make_p256_keys_pbkdf2(password, key_amount = 1):
 	Make P-256 multiple key pairs at once from any string
 	Returns a list
 	'''
-
+	password = sha000(password, 5)
 	salt = SHA256.new(password.encode()).digest()
 	#print('salt',benc.encode(salt))
 	count = int(str(int(benc.encode(salt),16))[0:5])
@@ -60,6 +76,7 @@ def make_curve25519_keys_pbkdf2(password, key_amount = 1):
 	Make multiple key pairs at once, eather P-256 or curve25519 from any string
 	Returns a list
 	'''
+	password = sha000(password, 5)
 	salt = SHA256.new(password.encode()).digest()
 	#print('salt',benc.encode(salt))
 	count = int(str(int(benc.encode(salt),16))[0:5])
@@ -74,6 +91,8 @@ def make_curve25519_keys_pbkdf2(password, key_amount = 1):
 		keys.append(PrivateKey(benc.encode(key), encoder=benc))
 		password = key
 	return keys
+	
+
 	
 
 def make_me_keys(password, type, key_amount = 1, size_rsa = 2048):
