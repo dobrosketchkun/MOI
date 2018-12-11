@@ -7,8 +7,10 @@ except:
 	from Sup import sha000
 try:
 	from .eff_long import words
+	#from .words6 import words
 except:	
 	from eff_long import words
+	#from words6 import words
 import secrets as s
 import string
 
