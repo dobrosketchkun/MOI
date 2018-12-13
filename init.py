@@ -6,6 +6,15 @@ from Crypto.Cipher import AES
 import getpass
 import time
 import pickle 
+import sys
+
+
+#Turn traceback off (0) or on (1)
+sys.tracebacklimit = 0
+
+
+
+
 # answ_new_password = input('Would you like yo use your password or newly generated one? (mine/new)')
 # if answ_new_password == 'mine':
 	# pass
