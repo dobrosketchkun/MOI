@@ -33,7 +33,7 @@ def make_curve25519_keys_pbkdf2_branched(password, key_amount = 1, branches = [4
 		key = PBKDF2(password, salt = (str(salt) + str(branches[tymes%len(branches)])), dkLen = dkLen, count = count)
 		keys.append(PrivateKey(benc.encode(key), encoder=benc))
 		password = key
-	return keys	
+	return list(enumerate(keys, start=1))	
 	
 	
 def make_p256_keys_pbkdf2_branched(password, key_amount = 1, branches = [410]):
@@ -59,7 +59,7 @@ def make_p256_keys_pbkdf2_branched(password, key_amount = 1, branches = [410]):
 		key = PBKDF2(password, salt = (str(salt) + str(branches[tymes%len(branches)])), count = count)
 		keys.append(ECC.generate(curve = 'P-256', randfunc=my_rand))
 		password = key
-	return keys	
+	return list(enumerate(keys, start=1))	
 	
 	
 def make_rsa_keys_branched(password, size = 2048, key_amount = 1, branches = [410]):
@@ -81,7 +81,7 @@ def make_rsa_keys_branched(password, size = 2048, key_amount = 1, branches = [41
 		master_key = PBKDF2(password, salt = (str(sha256) + str(branches[tymes%len(branches)])), count=10000) 
 		keys.append(RSA.generate(size, randfunc=my_rand)) #rsa_key.export_key('PEM')
 		password = keys[-1].export_key('PEM').decode()
-	return keys	
+	return list(enumerate(keys, start=1))	
 	
 
 def make_me_keys(password, type, key_amount = 1, size_rsa = 2048, branches = [410]):
@@ -113,28 +113,28 @@ if __name__ == '__main__':
 			quit()
 		else:
 			print('')
-			p256 = make_me_keys(password, type = 'P-256', key_amount = 3, branches = branches)
+			p256 = make_me_keys(password, type = 'P-256', key_amount = 2, branches = branches)
 			for p in p256:
-				sec_pem = p.export_key(format='PEM')
+				sec_pem = p[1].export_key(format='PEM')
 				#sec_der = p.export_key(format='DER')
 				print(sec_pem)
 				#print('')
 
-				pub_pem = p._export_public_pem(compress = 0) #PEM
+				pub_pem = p[1]._export_public_pem(compress = 0) #PEM
 				#pub_der = p._export_subjectPublicKeyInfo(compress = 0) #DER
 				print(pub_pem)
 				print('')
 
 
-			curve25519 = make_me_keys(password, type = 'curve25519', key_amount = 3, branches = branches)
+			curve25519 = make_me_keys(password, type = 'curve25519', key_amount = 2, branches = branches)
 			for c in curve25519:
-				pub19 = benc.encode(c.public_key.__bytes__())
-				sec19 = benc.encode(c.__bytes__())
+				pub19 = benc.encode(c[1].public_key.__bytes__())
+				sec19 = benc.encode(c[1].__bytes__())
 				print(pub19)
 				print(sec19)
 				print('')
 			
 			rsa_key = make_me_keys(password, type = 'RSA',size_rsa = 1024, key_amount =  2, branches = branches)
 			for r in rsa_key:
-				print(r.export_key('PEM').decode())
+				print(r[1].export_key('PEM').decode())
 				print('')

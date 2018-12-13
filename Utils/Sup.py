@@ -3,7 +3,7 @@ import sys
 from time import sleep
 import subprocess
 import platform
-
+import json
 
 def sha000(password, circles = 1):
 	'''
@@ -57,4 +57,13 @@ def pretty_json(your_json = None, operation_type = None, path = 'config.json'):
 			exit()
 	else:
 		print('operation type:', operation_type,'\n')
-		raise ValueError('Only "r" - read or "w" - write types are allowed.')	
+		raise ValueError('Only "r" - read or "w" - write types are allowed.')
+
+
+initial_structure = \
+{
+'Public_encryption': None, 
+'Public_signing': None, 
+'Messages': {1: None},
+'Points': None
+}
