@@ -109,7 +109,7 @@ while kn:
 	p_number = input('')
 	printed('\nYour choice:\n')
 	p_choice = [key for key in keys['p256'] if key[0] == int(p_number)]
-	p_text = benc.encode(p_choice[0][1].export_key(format='DER')).decode()
+	p_text = benc.encode(p_choice[0][1]._export_subjectPublicKeyInfo(compress = 0)).decode()
 	printed(p_text, 0.01)
 
 	printed('\nAre you happy with your choice?\n')
