@@ -30,7 +30,7 @@ def sha000(password, circles = 1):
 
 def printed(text, time =0.02):
 	'''
-	Make a neet typing effect
+	Make a cool typing effect
 	'''
 	for char in text:
 		sleep(time)
