@@ -18,7 +18,7 @@ def make_curve25519_keys_pbkdf2_branched(password, key_amount = 1, branches = [4
 	Brances implements additional layer of security. Branch is better be an integer, but, for real, it may be any string
 	Returns a list
 	'''
-	password = sha000(password, 5)
+	password = sha000(password, 50)
 	salt = SHA256.new(password.encode()).digest()
 	#print('salt',benc.encode(salt))
 	count = int(str(int(benc.encode(salt),16))[0:5])
@@ -42,7 +42,7 @@ def make_p256_keys_pbkdf2_branched(password, key_amount = 1, branches = [410]):
 	Brances implements additional layer of security. Branch is better be an integer, but, for real, it may be any string	
 	Returns a list
 	'''
-	password = sha000(password, 5)
+	password = sha000(password, 50)
 	salt = SHA256.new(password.encode()).digest()
 	#print('salt',benc.encode(salt))
 	count = int(str(int(benc.encode(salt),16))[0:5])
@@ -68,7 +68,7 @@ def make_rsa_keys_branched(password, size = 2048, key_amount = 1, branches = [41
 	Brances implements additional layer of security. Branch is better be an integer, but, for real, it may be any string	
 	Returns a list
 	'''
-	password = sha000(password, 5)
+	password = sha000(password, 50)
 	keys = []
 	sha256 = str(SHA256.new(password.encode()).digest())	
 
